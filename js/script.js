@@ -25,7 +25,7 @@ $(document).ready(function(){
   
     domains.forEach((val, i) => {
       $.ajax({
-        url: val,
+        url: 'https://cors-anywhere.herokuapp.com/' + val,
         success: function(){
           $('#container').append('<div class="alert alert-success text-center" role="alert">' + val + ' is UP</div>');
         },
