@@ -2,17 +2,11 @@ var domains = [
   'http://www.voxptech.com',
   'http://www.voxp.com',
   'http://www.qlabs-ai.com',
-  'https://www.youtube.com',
-  'https://smart.com.ph',
-  'https://www.github.com',
+  'https://reetoxxi.github.io/thesandbox',
   'https://cramless.elementfx.com',
-  'http://findeee.000webhostapp.com',
-  'https://www.ladbrokes.com',
-  'https://www.gap.com',
   'https://www.viooz.ac',
-  'https://www.hsbc.co.uk',
-  'https://www.victoriassecret.com',
-  'https://www.accuweather.com'
+  'https://jollibebe.com'
+
 ];
 
 $(document).ready(function(){
@@ -24,13 +18,15 @@ $(document).ready(function(){
     var stopper = 0;
   
     domains.forEach((val, i) => {
+
       $.ajax({
-        url: 'https://cors-anywhere.herokuapp.com/' + val,
+        url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
         success: function(){
-          $('#container').append('<div class="alert alert-success text-center" role="alert">' + val + ' is UP</div>');
+          $('#container').append('<div class="alert alert-success text-center" role="alert"><b>' + val + '</b> is UP</div>');
+          window.scrollTo(0,100);
         },
         error: function(xhr,status,error){
-          $('#container').append('<div class="alert alert-danger text-center" role="alert">' + val + ' : ' + error + '</div>');
+          $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : ' + xhr.responseJSON.code + '</div>');
           window.scrollTo(0,100);
         },
         complete: function(){
