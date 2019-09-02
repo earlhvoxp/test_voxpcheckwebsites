@@ -10,15 +10,31 @@ var domains = [
 ];
 
 $(document).ready(function(){
-
+  
+  var downWebsitesFound = [];
   const checkWebsites = () => {
     //clear draw field
     $('#container').html('');
 
     var stopper = 0;
-  
-    domains.forEach((val, i) => {
+    var checker = setInterval(function(){
+      window.scrollTo(0,100);
+      console.log('beat');
+      if(stopper == domains.length){
+        clearInterval(checker);
+        $('#loader').removeClass('fa-spin');
+        $('#loader').removeClass('fa-cog');//.addClass('fa-check-circle');
+        // $('#loader').css('color','green');
+        // setTimeout(function(){
+        //   $('#loader').fadeOut(2000);
+        // },2000);
+        sendReport();
+        console.log('end');
 
+      }
+    },2000);
+
+    domains.forEach((val, i) => {
       $.ajax({
         url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
         success: function(){
@@ -28,30 +44,38 @@ $(document).ready(function(){
         error: function(xhr,status,error){
           $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : ' + xhr.responseJSON.code + '</div>');
           window.scrollTo(0,100);
+          downWebsitesFound.push(val);
         },
         complete: function(){
           window.scrollTo(0,100);
           stopper++;
         }
-      });
-  
-      var checker = setInterval(function(){
-        window.scrollTo(0,100);
-        if(stopper == domains.length){
-          clearInterval(checker);
-          $('#loader').removeClass('fa-spin');
-          $('#loader').removeClass('fa-cog');//.addClass('fa-check-circle');
-          // $('#loader').css('color','green');
-          // setTimeout(function(){
-          //   $('#loader').fadeOut(2000);
-          // },2000);
-        }
-      },2000);
+      });  
     });
-
   }; //end of checkWebsites
 
+  const sendReport = () => {
+    var formattedMSG = '';
+    downWebsitesFound.forEach((val,i) => {
+      formattedMSG += (val + ' | ');
+    });
+    console.log(formattedMSG);
+    
+    var templateParams = {
+        downWebsitesList: formattedMSG,
+      };
+      
+    emailjs.send('gmail', 'template_8dgDr4hT', templateParams).then(
+      function(response) {
+        console.log('SUCCESS!', response.status, response.text);
+      }, 
+      function(error) {
+        console.log('FAILED...', error);
+    });
+  };
+
   checkWebsites();
+
   //Checks websites on interval; default = 7,200,000ms (2hrs)
   var checkWebsitesInterval = setInterval(function(){
     checkWebsites();
