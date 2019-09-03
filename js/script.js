@@ -1,10 +1,10 @@
 var domains = [
   'http://www.voxptech.com',
-  'http://www.voxp.com',
+  // 'http://www.voxp.com',
   'http://www.qlabs-ai.com',
   'https://reetoxxi.github.io/thesandbox',
-  'https://cramless.elementfx.com',
-  'https://www.viooz.ac',
+  // 'https://cramless.elementfx.com',
+  // 'https://www.viooz.ac',
   'https://jollibebe.com'
 
 ];
@@ -13,13 +13,13 @@ $(document).ready(function(){
   
   var downWebsitesFound = [];
   const checkWebsites = () => {
-    //clear draw field
+    //init
+    downWebsitesFound = [];
     $('#container').html('');
 
     var stopper = 0;
     var checker = setInterval(function(){
       window.scrollTo(0,100);
-      console.log('beat');
       if(stopper == domains.length){
         clearInterval(checker);
         $('#loader').removeClass('fa-spin');
@@ -28,7 +28,9 @@ $(document).ready(function(){
         // setTimeout(function(){
         //   $('#loader').fadeOut(2000);
         // },2000);
-        sendReport();
+        
+        //Send an email only when at least one website is down
+        downWebsitesFound.length > 0 ? sendReport() : '';
         console.log('end');
 
       }
@@ -59,19 +61,12 @@ $(document).ready(function(){
     downWebsitesFound.forEach((val,i) => {
       formattedMSG += (val + ' | ');
     });
-    console.log(formattedMSG);
     
     var templateParams = {
         downWebsitesList: formattedMSG,
       };
       
-    emailjs.send('gmail', 'template_8dgDr4hT', templateParams).then(
-      function(response) {
-        console.log('SUCCESS!', response.status, response.text);
-      }, 
-      function(error) {
-        console.log('FAILED...', error);
-    });
+    emailjs.send('gmail', 'template_8dgDr4hT', templateParams);
   };
 
   checkWebsites();
