@@ -48,7 +48,12 @@ $(document).ready(function(){
           leemendiolamd = res.match(/\<h1\>4\<span\>0\<\/span\>4\<\/h1\>/g);
           reetoxxigh = res.match(/\<h1\>404\</g);
 
-          leemendiolamd || reetoxxigh ? $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : Not Found</div>') : $('#container').append('<div class="alert alert-success text-center" role="alert"><b>' + val + '</b> is UP</div>');
+          if (leemendiolamd || reetoxxigh) {
+            $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : Not Found</div>')
+            downWebsitesFound.push(val);
+          } else {
+            $('#container').append('<div class="alert alert-success text-center" role="alert"><b>' + val + '</b> is UP</div>');
+          }
 
           window.scrollTo(0,100);
         },
