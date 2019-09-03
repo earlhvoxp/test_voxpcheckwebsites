@@ -4,7 +4,8 @@ var domains = [
   'https://leemendiolamd.com/vck',
   'https://www.mindbody-therapeutics.com/',
   'http://iot.voxptech.com/',
-  'http://voxptech.com/'
+  'http://voxptech.com/',
+  'http://reetoxxi.github.io/sample'
 
 ];
 
@@ -36,10 +37,19 @@ $(document).ready(function(){
     },2000);
 
     domains.forEach((val, i) => {
+      var leemendiolamd = '';
+      var reetoxxigh = '';
+
       $.ajax({
         url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
-        success: function(){
-          $('#container').append('<div class="alert alert-success text-center" role="alert"><b>' + val + '</b> is UP</div>');
+        success: function(res){
+
+          //for urls with path to check
+          leemendiolamd = res.match(/\<h1\>4\<span\>0\<\/span\>4\<\/h1\>/g);
+          reetoxxigh = res.match(/\<h1\>404\</g);
+
+          leemendiolamd || reetoxxigh ? $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : Not Found</div>') : $('#container').append('<div class="alert alert-success text-center" role="alert"><b>' + val + '</b> is UP</div>');
+
           window.scrollTo(0,100);
         },
         error: function(xhr,status,error){
