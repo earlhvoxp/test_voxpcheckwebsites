@@ -1,11 +1,10 @@
 var domains = [
-  'http://www.voxptech.com',
-  // 'http://www.voxp.com',
-  'http://www.qlabs-ai.com',
-  'https://reetoxxi.github.io/thesandbox',
-  // 'https://cramless.elementfx.com',
-  // 'https://www.viooz.ac',
-  'https://jollibebe.com'
+  'https://leemendiolamd.com/',
+  'https://www.leemendiolamd.com/tcov/',
+  'https://leemendiolamd.com/vck',
+  'https://www.mindbody-therapeutics.com/',
+  'http://iot.voxptech.com/',
+  'http://voxptech.com/'
 
 ];
 
