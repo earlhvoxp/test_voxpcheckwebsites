@@ -49,16 +49,16 @@ $(document).ready(function(){
           reetoxxigh = res.match(/\<h1\>404\</g);
 
           if (leemendiolamd || reetoxxigh) {
-            $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : Not Found</div>')
+            $('#container').append('<div class="alert alert-danger text-center" role="alert"><b><a class="text-danger" href="' + val + '" target="_blank">' + val + '</a></b> : Not Found</div>')
             downWebsitesFound.push(val);
           } else {
-            $('#container').append('<div class="alert alert-success text-center" role="alert"><b>' + val + '</b> is UP</div>');
+            $('#container').append('<div class="alert alert-success text-center" role="alert"><b><a class="text-success" href="' + val + '" target="_blank">' + val + '</a></b> is UP</div>');
           }
 
           window.scrollTo(0,100);
         },
         error: function(xhr,status,error){
-          $('#container').append('<div class="alert alert-danger text-center" role="alert"><b>' + val + '</b> : ' + xhr.responseJSON.code + '</div>');
+          $('#container').append('<div class="alert alert-danger text-center" role="alert"><b><a class="text-danger" href="' + val + '" target="_blank">' + val + '</a></b> : ' + xhr.responseJSON.code + '</div>');
           window.scrollTo(0,100);
           downWebsitesFound.push(val);
         },
