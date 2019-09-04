@@ -2,7 +2,7 @@ var domains = [
   // 'http://reetoxxi.github.io/sample',
   'https://leemendiolamd.com/',
   'https://www.leemendiolamd.com/tcov/',
-  'https://leemendiolamd.com/vck',
+  'https://leemendiolamd.com/vkc/',
   'https://www.mindbody-therapeutics.com/',
   'http://iot.voxptech.com/',
   'http://voxptech.com/',
