@@ -88,6 +88,6 @@ $(document).ready(function(){
   //Checks websites on interval; default = 7,200,000ms (2hrs)
   var checkWebsitesInterval = setInterval(function(){
     checkWebsites();
-  },7200000);
+  },3600000);
 
 });
