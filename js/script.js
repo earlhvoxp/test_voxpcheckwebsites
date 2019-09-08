@@ -31,7 +31,8 @@ $(document).ready(function(){
         
         //Send an email only when at least one website is down
         downWebsitesFound.length > 0 ? sendReport() : '';
-        console.log('end');
+
+        console.log('Checked at: ' + (new Date()));
 
       }
     },2000);
