@@ -6,6 +6,7 @@ var domains = [
   'https://www.mindbody-therapeutics.com/',
   'http://iot.voxptech.com/',
   'http://voxptech.com/',
+  'http://qlabs-ai.com'
 
 ];
 
@@ -40,17 +41,23 @@ $(document).ready(function(){
     domains.forEach((val, i) => {
       var leemendiolamd = '';
       var reetoxxigh = '';
+      var query_0 = '';
+      var query_1 = '';
 
       $.ajax({
         url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
         success: function(res){
-
+          // if(val == 'http://qlabs-ai.com') {
+          //   console.log(res);
+          // }
           //for urls with path to check
           leemendiolamd = res.match(/\<h1\>4\<span\>0\<\/span\>4\<\/h1\>/g);
           reetoxxigh = res.match(/\<h1\>404\</g);
-
-          if (leemendiolamd || reetoxxigh) {
-            $('#container').append('<div class="alert alert-danger text-center" role="alert"><b><a class="text-danger" href="' + val + '" target="_blank">' + val + '</a></b> : Not Found</div>')
+          query_0 = res.match(/\<iframe src\=\"http\:\/\/parked\-content\.godaddy\.com\//g); //bandaid for now
+          // query_1 = res.match(/404/g);
+          // console.log(val + ' ' + query_0);
+          if (leemendiolamd || reetoxxigh || query_0) {
+            $('#container').append('<div class="alert alert-danger text-center" role="alert"><b><a class="text-danger" href="' + val + '" target="_blank">' + val + '</a></b> : Parked/Not Found</div>')
             downWebsitesFound.push(val);
           } else {
             $('#container').append('<div class="alert alert-success text-center" role="alert"><b><a class="text-success" href="' + val + '" target="_blank">' + val + '</a></b> is UP</div>');
