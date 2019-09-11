@@ -1,101 +1,135 @@
-var domains = [
-  // 'http://reetoxxi.github.io/sample',
-  'https://leemendiolamd.com/',
-  'https://www.leemendiolamd.com/tcov/',
-  'https://leemendiolamd.com/vkc/',
-  'https://www.mindbody-therapeutics.com/',
-  'http://iot.voxptech.com/',
-  'http://voxptech.com/',
-  'http://qlabs-ai.com'
-
+var domains = [ //be sure to add a target/criteria
+  // 'http://reetoxxi.github.io/test_voxpcheckwebsites',
+  'https://www.leemendiolamd.com',
+  'https://www.leemendiolamd.com/tcov',
+  'https://www.leemendiolamd.com/vkc',
+  'https://www.mindbody-therapeutics.com',
+  // 'http://iot.voxptech.com',
+  'http://www.voxptech.com',
+  'http://www.qlabs-ai.com',
 ];
+var downWebsitesFound = [];
 
-$(document).ready(function(){
+const init = () => {
+  //if offline, retry every 5 seconds
+  isOnline = window.navigator.onLine ? checkBypassCors() : setTimeout(isOnline, 5000);
+};
+
+const sendReport = () => {
+  var formattedMSG = '';
+  downWebsitesFound.forEach((val,i) => {
+    formattedMSG += (val + ' | ');
+  });
   
-  var downWebsitesFound = [];
-  const checkWebsites = () => {
-    //init
-    downWebsitesFound = [];
-    $('#container').html('');
-
-    var stopper = 0;
-    var checker = setInterval(function(){
-      window.scrollTo(0,100);
-      if(stopper == domains.length){
-        clearInterval(checker);
-        $('#loader').removeClass('fa-spin');
-        $('#loader').removeClass('fa-cog');//.addClass('fa-check-circle');
-        // $('#loader').css('color','green');
-        // setTimeout(function(){
-        //   $('#loader').fadeOut(2000);
-        // },2000);
-        
-        //Send an email only when at least one website is down
-        downWebsitesFound.length > 0 ? sendReport() : '';
-
-        console.log('Checked at: ' + (new Date()));
-
-      }
-    },2000);
-
-    domains.forEach((val, i) => {
-      var leemendiolamd = '';
-      var reetoxxigh = '';
-      var query_0 = '';
-      var query_1 = '';
-
-      $.ajax({
-        url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
-        success: function(res){
-          // if(val == 'http://qlabs-ai.com') {
-          //   console.log(res);
-          // }
-          //for urls with path to check
-          leemendiolamd = res.match(/\<h1\>4\<span\>0\<\/span\>4\<\/h1\>/g);
-          reetoxxigh = res.match(/\<h1\>404\</g);
-          query_0 = res.match(/\<iframe src\=\"http\:\/\/parked\-content\.godaddy\.com\//g); //bandaid for now
-          // query_1 = res.match(/404/g);
-          // console.log(val + ' ' + query_0);
-          if (leemendiolamd || reetoxxigh || query_0) {
-            $('#container').append('<div class="alert alert-danger text-center" role="alert"><b><a class="text-danger" href="' + val + '" target="_blank">' + val + '</a></b> : Parked/Not Found</div>')
-            downWebsitesFound.push(val);
-          } else {
-            $('#container').append('<div class="alert alert-success text-center" role="alert"><b><a class="text-success" href="' + val + '" target="_blank">' + val + '</a></b> is UP</div>');
-          }
-
-          window.scrollTo(0,100);
-        },
-        error: function(xhr,status,error){
-          $('#container').append('<div class="alert alert-danger text-center" role="alert"><b><a class="text-danger" href="' + val + '" target="_blank">' + val + '</a></b> : ' + xhr.responseJSON.code + '</div>');
-          window.scrollTo(0,100);
-          downWebsitesFound.push(val);
-        },
-        complete: function(){
-          window.scrollTo(0,100);
-          stopper++;
-        }
-      });  
-    });
-  }; //end of checkWebsites
-
-  const sendReport = () => {
-    var formattedMSG = '';
-    downWebsitesFound.forEach((val,i) => {
-      formattedMSG += (val + ' | ');
-    });
+  var templateParams = {
+      downWebsitesList: formattedMSG,
+    };
     
-    var templateParams = {
-        downWebsitesList: formattedMSG,
-      };
-      
-    emailjs.send('gmail', 'template_8dgDr4hT', templateParams);
-  };
+  emailjs.send('gmail', 'template_8dgDr4hT', templateParams);
+  setTimeout(() => {
+    console.log('Report sent!')
+  },2000);
+};
 
-  checkWebsites();
+const checkWebsites = () => {
+  downWebsitesFound = []; // initialize down websites found
 
-  //Checks websites on interval; default = 7,200,000ms (2hrs)
-  var checkWebsitesInterval = setInterval(function(){
-    checkWebsites();
-  },3600000);
+  domains.forEach((val, i) => {
+    this._lastRecord = ''; 
+    $.ajax({
+      url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
+      async: false,
+      success: (res) => {
+        this._criteria = [
+          //add target/criteria here to qualify for checking
+          res.match(/\<meta property\=\"og\:title\" content\=\"Home \- Lee Mendiola\, M\.D\.\"/g) ? 1 : 0,
+          res.match(/\<meta property\=\"og\:title\" content\=\"TMS Center of Ventura \- Lee Mendiola MD\"/g) ? 1 : 0,
+          res.match(/\<link rel\=\"canonical\" href\=\"https\:\/\/www\.leemendiolamd\.com\/vkc\/\"/g) ? 1 : 0,
+          res.match(/\<meta property\=\"og\:title\" content\=\"MindBody Therapeutics \| Ketamine Infusion Therapy\"/g) ? 1 : 0,
+          res.match(/\<link rel\=\"canonical\" href\=\"http\:\/\/voxptech\.com\/\"/g) ? 1 : 0,
+          res.match(/\<link rel\=\"canonical\" href\=\"http\:\/\/qlabs\-ai\.com\/\"/g) ? 1 : 0,
+          res.match(/\<span id\=\"lastrecorddate\"/g) ? 1 : 0
+        ];
 
+        if (this._criteria.includes(1) && val == 'http://iot.voxptech.com') {
+          $.ajax({url:'https://bypasscors.herokuapp.com/api/?url=http://iot.voxptech.com/api/retrieve2.php',async: false, success: (res)=>{this._lastRecord = JSON.parse(res)[JSON.parse(res).length - 1].insertdate;}});    
+        }
+      },
+      complete: (xhr, status) => {
+        //-- iot.voxptech.com (specifics)
+        var currTime = new Date();
+        var lastRecord = new Date (this._lastRecord);
+        var criteria0_iot = val == 'http://iot.voxptech.com' && status == 'success' && this._criteria.includes(1) && !((currTime.getTime() - lastRecord.getTime()) > 7200000);
+        // if last record is 2 hours or more from current time, alert us.
+
+        var criteria1_general = val !== 'http://iot.voxptech.com' && status == 'success' && this._criteria.includes(1);
+        //for general, just check if certain element is found on result and if status of ajax is success
+
+        //build basic main display element
+        var elementToAdd = document.createElement('div');
+        var anchoredElement = document.createElement('a');
+        anchoredElement.classList.add('font-weight-bold');
+        anchoredElement.setAttribute('href', val);
+        anchoredElement.setAttribute('targer', '_blank');
+        elementToAdd.appendChild(anchoredElement);
+        
+        if (criteria0_iot) { // add new if for new special-treatment/site-specific handling
+          elementToAdd.classList.add('alert');
+          elementToAdd.classList.add('alert-success');
+          elementToAdd.classList.add('text-center');
+          anchoredElement.innerHTML = val + ' is UP';
+          anchoredElement.classList.add('text-success');
+          $('#container').append(elementToAdd);
+        } else if (criteria1_general) {
+          elementToAdd.classList.add('alert');
+          elementToAdd.classList.add('alert-success');
+          elementToAdd.classList.add('text-center');
+          anchoredElement.innerHTML = val + ' is UP';
+          anchoredElement.classList.add('text-success');
+          $('#container').append(elementToAdd);
+        } else { //all with error in request needs to be checked manually
+          elementToAdd.classList.add('alert');
+          elementToAdd.classList.add('alert-danger');
+          elementToAdd.classList.add('text-center');
+          anchoredElement.innerHTML = val + ': Something\'s wrong. Check!';
+          anchoredElement.classList.add('text-danger');
+          $('#container').append(elementToAdd);
+
+          downWebsitesFound.push(val); // to be collected for email report
+        }
+
+        // (domains.length - 1) == i ? sendReport() : console.log('No issues. Checked at ' + new Date());
+
+        if ((domains.length - 1) == i && downWebsitesFound.length < 1) {
+          console.log('No issues. Checked at ' + new Date());
+        } else if ((domains.length - 1) == i && downWebsitesFound.length > 0) {
+          console.log('Sending report...');
+          sendReport();
+        }
+        
+        if ((domains.length - 1) == i) {
+          $('#loader').removeClass('fa-spin');
+          $('#loader').remove(); //.addClass('fa-check-circle');
+        }
+      }
+    });
+  });
+};
+
+const checkBypassCors = () => {
+  $.ajax({url:'https://bypasscors.herokuapp.com/api/?url=https://reetoxxi.github.io/',
+    async: false,
+    success: function() {
+      checkWebsites();
+    },
+    error: function(xhr) { //because for cors issues, we are dependent to this api :(
+      alert('Please check the websites manually. Thank you!');
+      console.log('Logged at ' + new Date());
+    }
+   });
+};
+
+$(document).ready(() =>{
+  init();
+  setInterval(init, 3600000);
 });
