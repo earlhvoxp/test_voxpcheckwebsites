@@ -70,7 +70,7 @@ const checkWebsites = () => {
         var anchoredElement = document.createElement('a');
         anchoredElement.classList.add('font-weight-bold');
         anchoredElement.setAttribute('href', val);
-        anchoredElement.setAttribute('targer', '_blank');
+        anchoredElement.setAttribute('target', '_blank');
         elementToAdd.appendChild(anchoredElement);
         
         if (criteria0_iot) { // add new if for new special-treatment/site-specific handling
