@@ -32,6 +32,7 @@ const sendReport = () => {
 };
 
 const checkWebsites = () => {
+  $('#container').html(''); // clear output container
   downWebsitesFound = []; // initialize down websites found
 
   domains.forEach((val, i) => {
