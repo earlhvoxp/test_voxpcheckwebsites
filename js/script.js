@@ -4,7 +4,7 @@ var domains = [ //be sure to add a target/criteria
   'https://www.leemendiolamd.com/tcov',
   'https://www.leemendiolamd.com/vkc',
   'https://www.mindbody-therapeutics.com',
-  // 'http://iot.voxptech.com',
+  'http://iot.voxptech.com',
   'http://www.voxptech.com',
   'http://www.qlabs-ai.com',
 ];
@@ -52,6 +52,7 @@ const checkWebsites = () => {
           res.match(/\<span id\=\"lastrecorddate\"/g) ? 1 : 0
         ];
 
+        //additional process for iot.voxptech.com - determines if sensors are down
         if (this._criteria.includes(1) && val == 'http://iot.voxptech.com') {
           $.ajax({url:'https://bypasscors.herokuapp.com/api/?url=http://iot.voxptech.com/api/retrieve2.php',async: false, success: (res)=>{this._lastRecord = JSON.parse(res)[JSON.parse(res).length - 1].insertdate;}});    
         }
@@ -60,7 +61,7 @@ const checkWebsites = () => {
         //-- iot.voxptech.com (specifics)
         var currTime = new Date();
         var lastRecord = new Date (this._lastRecord);
-        var criteria0_iot = val == 'http://iot.voxptech.com' && status == 'success' && this._criteria.includes(1) && !((currTime.getTime() - lastRecord.getTime()) > 7200000);
+        var criteria0_iot = val == 'http://iot.voxptech.com' && status == 'success' && this._criteria.includes(1) && !(((currTime.getTime() + (currTime.getTimezoneOffset() * 60000)) - lastRecord.getTime()) > 7200000);
         // if last record is 2 hours or more from current time, alert us.
 
         var criteria1_general = val !== 'http://iot.voxptech.com' && status == 'success' && this._criteria.includes(1);
