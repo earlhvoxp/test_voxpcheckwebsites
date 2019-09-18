@@ -45,9 +45,9 @@ const checkWebsites = () => {
           //add target/criteria here to qualify for checking
           res.match(/\<meta property\=\"og\:title\" content\=\"Home \- Lee Mendiola\, M\.D\.\"/g) ? 1 : 0,
           res.match(/\<meta property\=\"og\:title\" content\=\"TMS Center of Ventura \- Lee Mendiola MD\"/g) ? 1 : 0,
-          res.match(/\<link rel\=\"canonical\" href\=\"https\:\/\/www\.leemendiolamd\.com\/vkc\/\"/g) ? 1 : 0,
+          res.match(/\<link rel\=\"pingback\" href\=\"https\:\/\/www\.leemendiolamd\.com\/vkc\/xmlrpc\.php\"/g) ? 1 : 0,
           res.match(/\<meta property\=\"og\:title\" content\=\"MindBody Therapeutics \| Ketamine Infusion Therapy\"/g) ? 1 : 0,
-          res.match(/\<link rel\=\"canonical\" href\=\"http\:\/\/voxptech\.com\/\"/g) ? 1 : 0,
+          res.match(/\<link rel\=\"pingback\" href\=\"http\:\/\/voxptech\.com\/xmlrpc\.php\"/g) ? 1 : 0,
           res.match(/\<link rel\=\"canonical\" href\=\"http\:\/\/qlabs\-ai\.com\/\"/g) ? 1 : 0,
           res.match(/\<span id\=\"lastrecorddate\"/g) ? 1 : 0
         ];
