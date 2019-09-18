@@ -35,7 +35,7 @@ const checkWebsites = () => {
   $('#container').html(''); // clear output container
   downWebsitesFound = []; // initialize down websites found
 
-  domains.forEach((val, i) => {
+  domains.forEach((val, i) => { 
     this._lastRecord = ''; 
     $.ajax({
       url: 'https://bypasscors.herokuapp.com/api/?url=' + encodeURIComponent(val),
